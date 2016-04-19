@@ -15,6 +15,8 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
     val URL_FORMAT = "https://spreadsheets.google.com/feeds/list/%s/%s/public/values?alt=json"
     val fetchUrl = URL(String.format(URL_FORMAT, documentId, worksheetId))
 
+    val nonAlphaRegex = Regex("[^a-zA-Z0-9]")
+
     override fun fetchAllRecords() : List<UblEntry> {
         // Read in the contents from the URL
         val raw = Resources.toString(fetchUrl, Charsets.UTF_8)
@@ -79,7 +81,6 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
         // Parse each item individually
         val caseUrl = parseEntryString(entryObject, fieldNames.caseUrl)
         val dateBanned = parseEntryString(entryObject, fieldNames.dateBanned)
-        val expiryDateString = parseEntryString(entryObject, fieldNames.expiryDate)
         val ign = parseEntryString(entryObject, fieldNames.ign)
         val lengthOfBan = parseEntryString(entryObject, fieldNames.lengthOfBan)
         val reason = parseEntryString(entryObject, fieldNames.reason)
@@ -106,9 +107,15 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
             throw InvalidDocumentFormatException("Invalid uuid - $uuidString")
         }
 
+        val expiryDateString = parseEntryString(entryObject, fieldNames.expiryDate)
         // Parse date from the string version
         val dateExpires = try {
-            dateFormat.parse(expiryDateString)
+            dateFormat.parse(
+                expiryDateString
+                        .replace("Janurary", "January", true) // Some people just can't spell
+                        .replace("Feburary", "February", true) // Some people just can't spell
+                        .replace(nonAlphaRegex, "") // Punctuation/spacing differs sometimes, strip everything but alphanumerics
+            )
         } catch (ex: java.text.ParseException) {
             logger.info("Unable to parse the date $expiryDateString for $uuid, using 'forever' instead")
             null
