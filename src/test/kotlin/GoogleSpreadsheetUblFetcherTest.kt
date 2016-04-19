@@ -1,14 +1,14 @@
 package gg.uhc.ubl
 
 import com.google.common.io.Resources
-import org.junit.Before
-import org.junit.Test
-import java.text.SimpleDateFormat
-import java.util.logging.Logger
 import org.assertj.core.api.Assertions.assertThat
 import org.json.simple.JSONArray
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
+import org.junit.Before
+import org.junit.Test
+import java.text.SimpleDateFormat
+import java.util.logging.Logger
 
 
 class GoogleSpreadsheetUblFetcherTest {
@@ -28,7 +28,7 @@ class GoogleSpreadsheetUblFetcherTest {
         fetcher = GoogleSpreadsheetUblFetcher(
             documentId = "",
             worksheetId = "",
-            dateFormat = SimpleDateFormat("MMMMM dd, yyyy"),
+            dateFormat = SimpleDateFormat("MMMMM dd,yyyy"),
             fieldNames = fieldNames,
             logger = Logger.getAnonymousLogger()
         )
@@ -123,7 +123,9 @@ class GoogleSpreadsheetUblFetcherTest {
     fun test_parse_entry_string() {
         val valid = JSONParser().parse("""
         {
-            "gsx${'$'}test": "value"
+            "gsx${'$'}test": {
+                "${'$'}t": "value"
+            }
         }
         """)
 
@@ -148,17 +150,55 @@ class GoogleSpreadsheetUblFetcherTest {
         fetcher.parseEntryString(invalidKey as JSONObject, "test");
     }
 
+    @Test(expected = GoogleSpreadsheetUblFetcher.InvalidDocumentFormatException::class)
+    fun test_parse_entry_string_invalid_subkey() {
+        val invalidKey = JSONParser().parse("""
+        {
+            "gsx${'$'}test": {
+                "${'$'}t": ["invalid"]
+            }
+        }
+        """)
+
+        fetcher.parseEntryString(invalidKey as JSONObject, "test");
+    }
+
+    @Test(expected = GoogleSpreadsheetUblFetcher.InvalidDocumentFormatException::class)
+    fun test_parse_entry_string_missing_subkey() {
+        val invalidKey = JSONParser().parse("""
+        {
+            "gsx${'$'}test": {}
+        }
+        """)
+
+        fetcher.parseEntryString(invalidKey as JSONObject, "test");
+    }
+
     @Test
     fun test_parse_entry() {
         val entryJSON = JSONParser().parse("""
         {
-            "gsx${'$'}${fieldNames.caseUrl}": "${fieldNames.caseUrl}",
-            "gsx${'$'}${fieldNames.ign}": "${fieldNames.ign}",
-            "gsx${'$'}${fieldNames.lengthOfBan}": "${fieldNames.lengthOfBan}",
-            "gsx${'$'}${fieldNames.reason}": "${fieldNames.reason}",
-            "gsx${'$'}${fieldNames.uuid}": "c0b075fa-049d-49ec-879e-45e5f0e66b08",
-            "gsx${'$'}${fieldNames.dateBanned}": "February 17, 2015",
-            "gsx${'$'}${fieldNames.expiryDate}": "February 17, 2015"
+            "gsx${'$'}${fieldNames.caseUrl}": {
+                "${'$'}t": "${fieldNames.caseUrl}"
+            },
+            "gsx${'$'}${fieldNames.ign}": {
+                "${'$'}t": "${fieldNames.ign}"
+            },
+            "gsx${'$'}${fieldNames.lengthOfBan}": {
+                "${'$'}t": "${fieldNames.lengthOfBan}"
+            },
+            "gsx${'$'}${fieldNames.reason}": {
+                "${'$'}t": "${fieldNames.reason}"
+            },
+            "gsx${'$'}${fieldNames.uuid}": {
+                "${'$'}t": "c0b075fa-049d-49ec-879e-45e5f0e66b08"
+            },
+            "gsx${'$'}${fieldNames.dateBanned}": {
+                "${'$'}t": "February 17, 2015"
+            },
+            "gsx${'$'}${fieldNames.expiryDate}": {
+                "${'$'}t": "February 17, 2015"
+            }
         }
         """)
 
@@ -169,9 +209,6 @@ class GoogleSpreadsheetUblFetcherTest {
         assertThat(entry.lengthOfBan).isEqualTo(fieldNames.lengthOfBan)
         assertThat(entry.reason).isEqualTo(fieldNames.reason)
         assertThat(entry.uuid.toString()).isEqualTo("c0b075fa-049d-49ec-879e-45e5f0e66b08")
-        assertThat(entry.banned).isWithinDayOfMonth(17)
-        assertThat(entry.banned).isWithinMonth(2)
-        assertThat(entry.banned).isWithinYear(2015)
         assertThat(entry.expires).isWithinDayOfMonth(17)
         assertThat(entry.expires).isWithinMonth(2)
         assertThat(entry.expires).isWithinYear(2015)
@@ -182,25 +219,53 @@ class GoogleSpreadsheetUblFetcherTest {
         val entriesJSON = JSONParser().parse("""
         [
             {
-                "gsx${'$'}${fieldNames.caseUrl}": "${fieldNames.caseUrl}",
-                "gsx${'$'}${fieldNames.ign}": "${fieldNames.ign}",
-                "gsx${'$'}${fieldNames.lengthOfBan}": "${fieldNames.lengthOfBan}",
-                "gsx${'$'}${fieldNames.reason}": "${fieldNames.reason}",
-                "gsx${'$'}${fieldNames.uuid}": "c0b075fa-049d-49ec-879e-45e5f0e66b08",
-                "gsx${'$'}${fieldNames.dateBanned}": "February 17, 2015",
-                "gsx${'$'}${fieldNames.expiryDate}": "February 17, 2015"
+                "gsx${'$'}${fieldNames.caseUrl}": {
+                    "${'$'}t": "${fieldNames.caseUrl}"
+                },
+                "gsx${'$'}${fieldNames.ign}": {
+                    "${'$'}t": "${fieldNames.ign}"
+                },
+                "gsx${'$'}${fieldNames.lengthOfBan}": {
+                    "${'$'}t": "${fieldNames.lengthOfBan}"
+                },
+                "gsx${'$'}${fieldNames.reason}": {
+                    "${'$'}t": "${fieldNames.reason}"
+                },
+                "gsx${'$'}${fieldNames.uuid}": {
+                    "${'$'}t": "c0b075fa-049d-49ec-879e-45e5f0e66b08"
+                },
+                "gsx${'$'}${fieldNames.dateBanned}": {
+                    "${'$'}t": "February 17, 2015"
+                },
+                "gsx${'$'}${fieldNames.expiryDate}": {
+                    "${'$'}t": "February 17, 2015"
+                }
             },
             {
                 "invalid entry": "value"
             },
             {
-                "gsx${'$'}${fieldNames.caseUrl}": "${fieldNames.caseUrl}",
-                "gsx${'$'}${fieldNames.ign}": "${fieldNames.ign}",
-                "gsx${'$'}${fieldNames.lengthOfBan}": "${fieldNames.lengthOfBan}",
-                "gsx${'$'}${fieldNames.reason}": "${fieldNames.reason}",
-                "gsx${'$'}${fieldNames.uuid}": "c0b075fa-049d-49ec-879e-45e5f0e66b08",
-                "gsx${'$'}${fieldNames.dateBanned}": "February 17, 2015",
-                "gsx${'$'}${fieldNames.expiryDate}": "February 17, 2015"
+                "gsx${'$'}${fieldNames.caseUrl}": {
+                    "${'$'}t": "${fieldNames.caseUrl}"
+                },
+                "gsx${'$'}${fieldNames.ign}": {
+                    "${'$'}t": "${fieldNames.ign}"
+                },
+                "gsx${'$'}${fieldNames.lengthOfBan}": {
+                    "${'$'}t": "${fieldNames.lengthOfBan}"
+                },
+                "gsx${'$'}${fieldNames.reason}": {
+                    "${'$'}t": "${fieldNames.reason}"
+                },
+                "gsx${'$'}${fieldNames.uuid}": {
+                    "${'$'}t": "c0b075fa-049d-49ec-879e-45e5f0e66b08"
+                },
+                "gsx${'$'}${fieldNames.dateBanned}": {
+                    "${'$'}t": "February 17, 2015"
+                },
+                "gsx${'$'}${fieldNames.expiryDate}": {
+                    "${'$'}t": "February 17, 2015"
+                }
             }
         ]
         """)
