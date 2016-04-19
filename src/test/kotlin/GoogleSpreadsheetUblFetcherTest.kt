@@ -279,6 +279,6 @@ class GoogleSpreadsheetUblFetcherTest {
     fun test_on_live_data() {
         val entries = fetcher.processRawJSON(Resources.toString(Resources.getResource("liveData.json"), Charsets.UTF_8))
 
-        assertThat(entries).hasSize(2047)
+        assertThat(entries).hasSize(2045)
     }
 }
