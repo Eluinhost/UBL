@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.logging.Logger
 
-open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, val dateFormat: SimpleDateFormat, val fieldNames: GoogleSpreadSheetColumnNames, val logger: Logger) : UblFetcher {
+open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, val dateFormat: SimpleDateFormat, val fieldNames: GoogleSpreadSheetColumnNames, val headerRows: Int, val logger: Logger) : UblFetcher {
     val URL_FORMAT = "https://spreadsheets.google.com/feeds/list/%s/%s/public/values?alt=json"
     val fetchUrl = URL(String.format(URL_FORMAT, documentId, worksheetId))
 
@@ -31,6 +31,7 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
     open fun convertEntryList(entryList: JSONArray) : List<UblEntry> {
         return entryList
                 .filterNotNull()
+                .drop(headerRows)
                 .mapIndexedNotNull({ index, entry ->
                     try {
                         parseEntry(entry as JSONObject)

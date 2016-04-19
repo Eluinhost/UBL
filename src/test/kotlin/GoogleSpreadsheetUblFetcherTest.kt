@@ -30,6 +30,7 @@ class GoogleSpreadsheetUblFetcherTest {
             worksheetId = "",
             dateFormat = SimpleDateFormat("MMMMMdd,yyyy"),
             fieldNames = fieldNames,
+            headerRows = 1,
             logger = Logger.getAnonymousLogger()
         )
     }
