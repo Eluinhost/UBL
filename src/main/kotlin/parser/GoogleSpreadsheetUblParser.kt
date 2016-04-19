@@ -1,7 +1,8 @@
-package gg.uhc.ubl
+package parser
 
 import com.google.common.base.Joiner
 import com.google.common.io.Resources
+import gg.uhc.ubl.UblEntry
 import org.json.simple.JSONArray
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
@@ -11,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.logging.Logger
 
-open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, val dateFormat: SimpleDateFormat, val fieldNames: GoogleSpreadSheetColumnNames, val headerRows: Int, val logger: Logger) : UblFetcher {
+open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, val dateFormat: SimpleDateFormat, val fieldNames: GoogleSpreadSheetColumnNames, val headerRows: Int, val logger: Logger) : UblParser {
     val URL_FORMAT = "https://spreadsheets.google.com/feeds/list/%s/%s/public/values?alt=json"
     val fetchUrl = URL(String.format(URL_FORMAT, documentId, worksheetId))
 
@@ -122,13 +123,13 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
         }
 
         return UblEntry(
-            caseUrl = caseUrl,
-            ign = ign,
-            reason = reason,
-            lengthOfBan = lengthOfBan,
-            uuid = uuid,
-            banned = dateBanned,
-            expires = dateExpires
+                caseUrl = caseUrl,
+                ign = ign,
+                reason = reason,
+                lengthOfBan = lengthOfBan,
+                uuid = uuid,
+                banned = dateBanned,
+                expires = dateExpires
         )
     }
 
