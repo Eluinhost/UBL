@@ -119,7 +119,7 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
 
         when (item) {
             null -> throw InvalidDocumentFormatException("Expected entry key `gsx${'$'}$key` but it was not found")
-            !is JSONObject -> throw InvalidDocumentFormatException("Expected entry key ${'$'}$key to be a String, found ${item.javaClass.name} instead")
+            !is JSONObject -> throw InvalidDocumentFormatException("Expected entry key ${'$'}$key to be a Object, found ${item.javaClass.name} instead")
             else -> {
                 val value = item["${'$'}t"]
 
