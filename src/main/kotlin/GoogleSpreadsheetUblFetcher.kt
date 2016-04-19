@@ -76,7 +76,7 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
 
         // Parse each item individually
         val caseUrl = parseEntryString(entryObject, fieldNames.caseUrl)
-        val dateBannedString = parseEntryString(entryObject, fieldNames.dateBanned)
+        val dateBanned = parseEntryString(entryObject, fieldNames.dateBanned)
         val expiryDateString = parseEntryString(entryObject, fieldNames.expiryDate)
         val ign = parseEntryString(entryObject, fieldNames.ign)
         val lengthOfBan = parseEntryString(entryObject, fieldNames.lengthOfBan)
@@ -90,17 +90,11 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
             throw InvalidDocumentFormatException("Invalid uuid - $uuidString")
         }
 
-        // Parse both dates from their string version
-        val dateBanned = try {
-            dateFormat.parse(dateBannedString)
-        } catch (ex: ParseException) {
-            throw InvalidDocumentFormatException("Invalid ban date format - $dateBannedString")
-        }
-
+        // Parse date from the string version
         val dateExpires = try {
             dateFormat.parse(expiryDateString)
         } catch (ex: ParseException) {
-            throw InvalidDocumentFormatException("Invalid expires date format - $dateBannedString")
+            throw InvalidDocumentFormatException("Invalid expires date format - $expiryDateString")
         }
 
         return UblEntry(
