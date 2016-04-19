@@ -39,7 +39,7 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
                     try {
                         parseEntry(entry as JSONObject)
                     } catch (ex: InvalidDocumentFormatException) {
-                        logger.warning("Skipping entry number $index. Error message: ${ex.message}}")
+                        logger.warning("Skipping row number ${index + 1}. Error message: ${ex.message}}")
                         null
                     }
                 })
