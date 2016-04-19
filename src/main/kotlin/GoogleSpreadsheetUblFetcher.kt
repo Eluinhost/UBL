@@ -93,7 +93,7 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
         // Parse date from the string version
         val dateExpires = try {
             dateFormat.parse(expiryDateString)
-        } catch (ex: ParseException) {
+        } catch (ex: java.text.ParseException) {
             throw InvalidDocumentFormatException("Invalid expires date format - $expiryDateString")
         }
 
