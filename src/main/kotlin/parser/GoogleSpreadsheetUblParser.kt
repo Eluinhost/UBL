@@ -1,4 +1,4 @@
-package parser
+package gg.uhc.ubl.parser
 
 import com.google.common.base.Joiner
 import com.google.common.io.Resources

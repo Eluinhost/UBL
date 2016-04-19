@@ -1,4 +1,4 @@
-package parser
+package gg.uhc.ubl.parser
 
 import com.google.common.io.Resources
 import org.assertj.core.api.Assertions.assertThat
@@ -24,7 +24,7 @@ class GoogleSpreadsheetUblParserTest {
             uuid = "uuid"
     )
 
-    @org.junit.Before fun startup() {
+    @Before fun startup() {
         fetcher = GoogleSpreadsheetUblParser(
                 documentId = "",
                 worksheetId = "",
@@ -36,22 +36,22 @@ class GoogleSpreadsheetUblParserTest {
     }
 
 
-    @org.junit.Test fun test_parse_outer_object_valid() {
+    @Test fun test_parse_outer_object_valid() {
         fetcher.parseOuterObject("{}")
         fetcher.parseOuterObject("""{"test":"value"}""")
     }
 
-    @org.junit.Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
+    @Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
     fun test_parse_outer_object_empty() {
         fetcher.parseOuterObject("")
     }
 
-    @org.junit.Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
+    @Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
     fun test_parse_outer_object_invalid() {
         fetcher.parseOuterObject("[]")
     }
 
-    @org.junit.Test fun test_grab_entries_list() {
+    @Test fun test_grab_entries_list() {
         val noEntries = JSONParser().parse("""
         {
             "feed": {
@@ -74,7 +74,7 @@ class GoogleSpreadsheetUblParserTest {
         assertThat(fetcher.grabEntriesList(threeEntries as JSONObject)).hasSize(3)
     }
 
-    @org.junit.Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
+    @Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
     fun test_grab_entries_missing_feed() {
         val missingFeed = JSONParser().parse("""
         {
@@ -85,7 +85,7 @@ class GoogleSpreadsheetUblParserTest {
         fetcher.grabEntriesList(missingFeed as JSONObject)
     }
 
-    @org.junit.Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
+    @Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
     fun test_grab_entries_invalid_feed() {
         val invalidFeed = JSONParser().parse("""
         {
@@ -96,7 +96,7 @@ class GoogleSpreadsheetUblParserTest {
         fetcher.grabEntriesList(invalidFeed as JSONObject)
     }
 
-    @org.junit.Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
+    @Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
     fun test_grab_entries_missing_entry() {
         val missingEntry = JSONParser().parse("""
         {
@@ -107,7 +107,7 @@ class GoogleSpreadsheetUblParserTest {
         fetcher.grabEntriesList(missingEntry as JSONObject)
     }
 
-    @org.junit.Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
+    @Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
     fun test_grab_entries_invalid_entry() {
         val invalidEntry = JSONParser().parse("""
         {
@@ -120,7 +120,7 @@ class GoogleSpreadsheetUblParserTest {
         fetcher.grabEntriesList(invalidEntry as JSONObject)
     }
 
-    @org.junit.Test
+    @Test
     fun test_parse_entry_string() {
         val valid = JSONParser().parse("""
         {
@@ -133,14 +133,14 @@ class GoogleSpreadsheetUblParserTest {
         assertThat(fetcher.parseEntryString(valid as JSONObject, "test")).isEqualTo("value")
     }
 
-    @org.junit.Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
+    @Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
     fun test_parse_entry_string_missing_key() {
         val missingKey = JSONParser().parse("{}")
 
         fetcher.parseEntryString(missingKey as JSONObject, "test");
     }
 
-    @org.junit.Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
+    @Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
     fun test_parse_entry_string_invalid_key() {
         val invalidKey = JSONParser().parse("""
         {
@@ -151,7 +151,7 @@ class GoogleSpreadsheetUblParserTest {
         fetcher.parseEntryString(invalidKey as JSONObject, "test");
     }
 
-    @org.junit.Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
+    @Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
     fun test_parse_entry_string_invalid_subkey() {
         val invalidKey = JSONParser().parse("""
         {
@@ -164,7 +164,7 @@ class GoogleSpreadsheetUblParserTest {
         fetcher.parseEntryString(invalidKey as JSONObject, "test");
     }
 
-    @org.junit.Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
+    @Test(expected = GoogleSpreadsheetUblParser.InvalidDocumentFormatException::class)
     fun test_parse_entry_string_missing_subkey() {
         val invalidKey = JSONParser().parse("""
         {
@@ -175,7 +175,7 @@ class GoogleSpreadsheetUblParserTest {
         fetcher.parseEntryString(invalidKey as JSONObject, "test");
     }
 
-    @org.junit.Test
+    @Test
     fun test_parse_entry() {
         val entryJSON = JSONParser().parse("""
         {
@@ -215,7 +215,7 @@ class GoogleSpreadsheetUblParserTest {
         assertThat(entry.expires).isWithinYear(2015)
     }
 
-    @org.junit.Test
+    @Test
     fun test_parse_valid_entries() {
         val entriesJSON = JSONParser().parse("""
         [
@@ -277,7 +277,7 @@ class GoogleSpreadsheetUblParserTest {
         assertThat(entries).hasSize(2)
     }
 
-    @org.junit.Test
+    @Test
     fun test_on_live_data() {
         val entries = fetcher.processRawJSON(Resources.toString(Resources.getResource("liveData.json"), Charsets.UTF_8))
 

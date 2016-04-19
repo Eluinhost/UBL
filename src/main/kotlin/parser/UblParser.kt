@@ -1,4 +1,4 @@
-package parser
+package gg.uhc.ubl.parser
 
 import gg.uhc.ubl.UblEntry
 
