@@ -1,5 +1,6 @@
 package gg.uhc.ubl
 
+import com.google.common.base.Joiner
 import com.google.common.io.Resources
 import org.json.simple.JSONArray
 import org.json.simple.JSONObject
@@ -82,10 +83,24 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
         val ign = parseEntryString(entryObject, fieldNames.ign)
         val lengthOfBan = parseEntryString(entryObject, fieldNames.lengthOfBan)
         val reason = parseEntryString(entryObject, fieldNames.reason)
-        val uuidString = parseEntryString(entryObject, fieldNames.uuid)
 
+        var uuidString = parseEntryString(entryObject, fieldNames.uuid)
         // Parse the UUID from the string version
         val uuid = try {
+            if (uuidString.contains('-').not()) {
+                if (uuidString.length != 32) throw IllegalArgumentException()
+
+                val seq = uuidString.asSequence().toMutableList()
+
+                seq.add(20, '-')
+                seq.add(16, '-')
+                seq.add(12, '-')
+                seq.add(8, '-')
+
+                uuidString = Joiner.on("").join(seq)
+            }
+
+
             UUID.fromString(uuidString)
         } catch (ex: IllegalArgumentException) {
             throw InvalidDocumentFormatException("Invalid uuid - $uuidString")
