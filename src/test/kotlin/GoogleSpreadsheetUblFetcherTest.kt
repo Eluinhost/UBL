@@ -28,7 +28,7 @@ class GoogleSpreadsheetUblFetcherTest {
         fetcher = GoogleSpreadsheetUblFetcher(
             documentId = "",
             worksheetId = "",
-            dateFormat = SimpleDateFormat("MMMMM dd,yyyy"),
+            dateFormat = SimpleDateFormat("MMMMMdd,yyyy"),
             fieldNames = fieldNames,
             logger = Logger.getAnonymousLogger()
         )
