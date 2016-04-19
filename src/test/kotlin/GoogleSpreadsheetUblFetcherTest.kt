@@ -219,6 +219,7 @@ class GoogleSpreadsheetUblFetcherTest {
     fun test_parse_valid_entries() {
         val entriesJSON = JSONParser().parse("""
         [
+            { "header": "row"},
             {
                 "gsx${'$'}${fieldNames.caseUrl}": {
                     "${'$'}t": "${fieldNames.caseUrl}"
