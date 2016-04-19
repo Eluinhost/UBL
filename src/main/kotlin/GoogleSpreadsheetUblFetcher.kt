@@ -122,7 +122,7 @@ open class GoogleSpreadsheetUblFetcher(documentId: String, worksheetId: String, 
                 when (value) {
                     null -> throw InvalidDocumentFormatException("Expected entry key `${'$'}$key.${'$'}t` but it was not found")
                     !is String -> throw InvalidDocumentFormatException("Expected entry key ${'$'}$key.${'$'}t to be a String, found ${value.javaClass.name} instead")
-                    else -> return value
+                    else -> return value.trim()
                 }
             }
         }
