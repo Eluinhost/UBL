@@ -21,6 +21,7 @@ open class UblHandler(
     protected var entries = mapOf<UUID, UblEntry>()
 
     protected open fun loadLive() = try {
+        plugin.logger.info("Starting load of UBL from live data")
         entries = liveParser.fetchAllRecords()
         initialized = true
         saveBackup()
@@ -35,6 +36,7 @@ open class UblHandler(
     }
 
     open fun loadBackup() = try {
+        plugin.logger.info("Loading of UBL from live data")
         entries = backupsParser.fetchAllRecords()
         initialized = true
     } catch (ex: Throwable) {
