@@ -3,6 +3,7 @@ package gg.uhc.ubl
 import gg.uhc.ubl.commands.RefreshUblCommand
 import gg.uhc.ubl.parser.BackupsUblParser
 import gg.uhc.ubl.parser.GoogleSpreadsheetUblParser
+import net.md_5.bungee.api.ChatColor
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.text.SimpleDateFormat
@@ -43,8 +44,8 @@ class Entry() : JavaPlugin() {
                 logger = logger
             ),
             backupsParser = BackupsUblParser(File(dataFolder, "ubl-backup.yml")),
-            notInitializedMessage = config.getString("waiting first load message"),
-            kickMessage = config.getString("banned message"),
+            notInitializedMessage = ChatColor.translateAlternateColorCodes('&', config.getString("waiting first load message")),
+            kickMessage = ChatColor.translateAlternateColorCodes('&', config.getString("banned message")),
             period = config.getInt("auto refresh minutes") * 60 * 20L,
             excludedUuids = exlcudedUuids
         )
