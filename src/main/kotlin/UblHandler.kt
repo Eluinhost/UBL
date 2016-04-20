@@ -2,6 +2,7 @@ package gg.uhc.ubl
 
 import gg.uhc.ubl.parser.BackupsUblParser
 import gg.uhc.ubl.parser.UblParser
+import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
@@ -26,6 +27,18 @@ open class UblHandler(
         entries = liveParser.fetchAllRecords()
         plugin.logger.info("Live UBL data loaded!")
         initialized = true
+
+        val toKick = plugin.server.onlinePlayers
+            .map { Pair(it, entries[it.uniqueId]) }
+            .filter { it.second != null }
+
+        plugin.server.scheduler.callSyncMethod(plugin, {
+            toKick.forEach {
+                it.first.kickPlayer(createKickMessage(it.second!!))
+                plugin.server.broadcastMessage("${ChatColor.RED}${it.first.name} was kicked due to being added to the UBL")
+            }
+        })
+
         saveBackup()
         true
     } catch (ex: Throwable) {
@@ -50,6 +63,14 @@ open class UblHandler(
         plugin.logger.severe("Failed to load from backup UBL: ${ex.message}")
     }
 
+    open fun createKickMessage(entry: UblEntry) = this.kickMessage
+        .replace("{{caseUrl}}", entry.caseUrl, true)
+        .replace("{{banned}}", entry.banned, true)
+        .replace("{{lengthOfBan}}", entry.lengthOfBan, true)
+        .replace("{{expires}}", BackupsUblParser.DATE_FORMAT.format(entry.expires), true)
+        .replace("{{reason}}", entry.reason, true)
+        .replace("{{ign}}", entry.ign, true)
+
     open fun start() = plugin.server.scheduler.scheduleAsyncRepeatingTask(plugin, { loadLive() }, 0, period)
 
     @EventHandler open fun on(event: AsyncPlayerPreLoginEvent) {
@@ -67,12 +88,6 @@ open class UblHandler(
         if (match.expires != null && match.expires.before(Date())) return
 
         event.loginResult = AsyncPlayerPreLoginEvent.Result.KICK_BANNED
-        event.kickMessage = this.kickMessage
-            .replace("{{caseUrl}}", match.caseUrl, true)
-            .replace("{{banned}}", match.banned, true)
-            .replace("{{lengthOfBan}}", match.lengthOfBan, true)
-            .replace("{{expires}}", BackupsUblParser.DATE_FORMAT.format(match.expires), true)
-            .replace("{{reason}}", match.reason, true)
-            .replace("{{ign}}", match.ign, true)
+        event.kickMessage = createKickMessage(match)
     }
 }
