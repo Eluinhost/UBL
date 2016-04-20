@@ -30,6 +30,7 @@ open class UblHandler(
     }
 
     protected open fun saveBackup() = try {
+        plugin.logger.info("Saving current UBL to backup file")
         backupsParser.saveRecords(entries)
     } catch (ex: Throwable) {
         plugin.logger.severe("Failed to save backup UBL: ${ex.message}")
