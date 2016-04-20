@@ -1,6 +1,7 @@
 package gg.uhc.ubl
 
 import gg.uhc.ubl.parser.UblParser
+import net.md_5.bungee.api.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
@@ -12,6 +13,7 @@ open class UblHandler(
     val liveParser: UblParser,
     val backupsParser: UblParser,
     val notInitializedMessage: String,
+    val kickMessage: String,
     val period: Long
 )
 : Listener {
@@ -48,6 +50,19 @@ open class UblHandler(
             return
         }
 
-        // TODO check entries
+        val match = entries[event.uniqueId] ?: return
+
+        // UBL entry has already expired
+        if (match.expires != null && match.expires.before(Date())) return
+
+        event.loginResult = AsyncPlayerPreLoginEvent.Result.KICK_BANNED
+        event.kickMessage = ChatColor.translateAlternateColorCodes('&', this.kickMessage.format(
+            match.caseUrl,
+            match.banned,
+            match.lengthOfBan,
+            match.expires,
+            match.reason,
+            match.ign
+        ))
     }
 }
