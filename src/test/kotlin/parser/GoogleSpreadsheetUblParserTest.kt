@@ -295,7 +295,7 @@ class GoogleSpreadsheetUblParserTest {
 
         val entries = fetcher.processRawJSON(Resources.toString(Resources.getResource("liveData.json"), Charsets.UTF_8))
 
-        assertThat(entries.keys).hasSize(2046)
-        assertThat(entries.values).hasSize(2046)
+        assertThat(entries.keys).hasSize(2008)
+        assertThat(entries.values).hasSize(2008)
     }
 }

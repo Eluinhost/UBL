@@ -1,6 +1,7 @@
 package gg.uhc.ubl.parser
 
 import com.google.common.base.Joiner
+import com.google.common.collect.ImmutableMap
 import com.google.common.io.Resources
 import gg.uhc.ubl.UblEntry
 import org.json.simple.JSONArray
@@ -40,15 +41,43 @@ open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, v
         return entryList
                 .filterNotNull()
                 .drop(headerRows)
-                .mapIndexedNotNull({ index, entry ->
+                .foldRightIndexed(mutableMapOf<UUID, UblEntry>(), { index, entry, map ->
                     try {
-                        parseEntry(entry as JSONObject)
+                        val parsed = parseEntry(entry as JSONObject)
+                        val conflict = map[parsed.first]
+
+                        val replace = when {
+                            // if conflict is null, there is no conflict, always replace
+                            conflict == null -> true
+                            // if the conflict has a null expires it means it is indefinite, never replace
+                            conflict.expires == null -> {
+                                logger.warning("An extra ban for the UUID ${parsed.first} was found, not replacing because current ban is indefinite")
+                                false
+                            }
+                            // If the parsed has a null expires it is indefinite, always replace
+                            parsed.second.expires == null -> {
+                                logger.warning("An extra ban for the UUID ${parsed.first} was found, replacing because replacement ban is indefinite")
+                                true
+                            }
+                            // If the parsed has a date further in advance than the conflicting, always replace
+                            (parsed.second.expires as Date).after(conflict.expires)-> {
+                                logger.warning("An extra ban for the UUID ${parsed.first} was found, replacing because replacement expires later")
+                                true
+                            }
+                            else -> {
+                                logger.warning("An extra ban for the UUID ${parsed.first} was found, not because current expires later")
+                                true
+                            }
+                        }
+
+                        if (replace) {
+                            map[parsed.first] = parsed.second
+                        }
                     } catch (ex: InvalidDocumentFormatException) {
-                        logger.warning("Skipping row number ${index + 1}. Error message: ${ex.message}}")
-                        null
+                        logger.warning("Skipping row number ${index + 1} (${entry.toString()}). Error message: ${ex.message}}")
                     }
+                    map
                 })
-                .toMap()
     }
 
     open fun parseOuterObject(rawJsonString: String) : JSONObject {
