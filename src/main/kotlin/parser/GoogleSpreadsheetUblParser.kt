@@ -145,9 +145,9 @@ open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, v
         val dateExpires = try {
             dateFormat.parse(
                 expiryDateString
-                        .replace("Janurary", "January", true) // Some people just can't spell
-                        .replace("Feburary", "February", true) // Some people just can't spell
-                        .replace(nonAlphaRegex, "") // Punctuation/spacing differs sometimes, strip everything but alphanumerics
+                    .replace("Janurary", "January", true) // Some people just can't spell
+                    .replace("Feburary", "February", true) // Some people just can't spell
+                    .replace(nonAlphaRegex, "") // Punctuation/spacing differs sometimes, strip everything but alphanumerics
             )
         } catch (ex: java.text.ParseException) {
             logger.warning("Unable to parse the date $expiryDateString for $uuid, using 'forever' instead")
