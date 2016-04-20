@@ -18,6 +18,10 @@ open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, v
 
     val nonAlphaRegex = Regex("[^a-zA-Z0-9]")
 
+    override fun saveRecords(records: List<UblEntry>) {
+        throw UnsupportedOperationException()
+    }
+
     override fun fetchAllRecords() : List<UblEntry> {
         // Read in the contents from the URL
         val raw = Resources.toString(fetchUrl, Charsets.UTF_8)
