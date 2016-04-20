@@ -23,6 +23,7 @@ open class UblHandler(
     protected open fun loadLive() = try {
         plugin.logger.info("Starting load of UBL from live data")
         entries = liveParser.fetchAllRecords()
+        plugin.logger.info("Live UBL data loaded!")
         initialized = true
         saveBackup()
     } catch (ex: Throwable) {
@@ -32,13 +33,15 @@ open class UblHandler(
     protected open fun saveBackup() = try {
         plugin.logger.info("Saving current UBL to backup file")
         backupsParser.saveRecords(entries)
+        plugin.logger.info("Backup completed!")
     } catch (ex: Throwable) {
         plugin.logger.severe("Failed to save backup UBL: ${ex.message}")
     }
 
     open fun loadBackup() = try {
-        plugin.logger.info("Loading of UBL from live data")
+        plugin.logger.info("Loading UBL from backup data")
         entries = backupsParser.fetchAllRecords()
+        plugin.logger.info("Backup UBL loaded!")
         initialized = true
     } catch (ex: Throwable) {
         plugin.logger.severe("Failed to load from backup UBL: ${ex.message}")
