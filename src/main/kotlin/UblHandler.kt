@@ -13,6 +13,7 @@ open class UblHandler(
     val liveParser: UblParser,
     val backupsParser: UblParser,
     val notInitializedMessage: String,
+    val excludedUuids: Set<UUID>,
     val kickMessage: String,
     val period: Long
 )
@@ -57,6 +58,8 @@ open class UblHandler(
             event.kickMessage = notInitializedMessage
             return
         }
+
+        if (excludedUuids.contains(event.uniqueId)) return
 
         val match = entries[event.uniqueId] ?: return
 

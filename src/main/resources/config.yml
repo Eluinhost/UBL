@@ -26,3 +26,4 @@ column names:
 auto refresh minutes: 10
 google spreadsheet id: "0AjACyg1Jc3_GdEhqWU5PTEVHZDVLYWphd2JfaEZXd2c"
 worksheet id: "od6"
+excluded uuids: []

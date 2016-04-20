@@ -6,6 +6,7 @@ import gg.uhc.ubl.parser.GoogleSpreadsheetUblParser
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.*
 
 class Entry() : JavaPlugin() {
     override fun onEnable() {
@@ -22,6 +23,16 @@ class Entry() : JavaPlugin() {
             uuid = config.getString("column names.uuid")
         )
 
+        val exlcudedUuids = config.getStringList("excluded uuids")
+            .mapNotNull {
+                try {
+                    UUID.fromString(it)
+                } catch (ex: IllegalArgumentException) {
+                    null
+                }
+            }
+            .toSet()
+
         val handler = UblHandler(
             plugin = this,
             liveParser = GoogleSpreadsheetUblParser(
@@ -34,7 +45,8 @@ class Entry() : JavaPlugin() {
             backupsParser = BackupsUblParser(File(dataFolder, "ubl-backup.yml")),
             notInitializedMessage = config.getString("waiting first load message"),
             kickMessage = config.getString("banned message"),
-            period = config.getInt("auto refresh minutes") * 60 * 20L
+            period = config.getInt("auto refresh minutes") * 60 * 20L,
+            excludedUuids = exlcudedUuids
         )
 
         handler.loadBackup()
