@@ -14,7 +14,7 @@ banned message: |
   Banned {{ign}} on {{banned}}: {{reason}}
 
   Case: &9{Case}
-  Expires: {{expires}}, {{lengthOfBan}]
+  Expires: {{expires}}, {{lengthOfBan}}
 field names:
   caseUrl: "case"
   expiryDate: "expirydate"
