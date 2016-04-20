@@ -8,6 +8,7 @@ import org.json.simple.parser.JSONParser
 import org.junit.Before
 import org.junit.Test
 import java.text.SimpleDateFormat
+import java.util.*
 import java.util.logging.Logger
 
 
@@ -279,8 +280,17 @@ class GoogleSpreadsheetUblParserTest {
 
     @Test
     fun test_on_live_data() {
+        fetcher = GoogleSpreadsheetUblParser(
+            documentId = "",
+            worksheetId = "",
+            dateFormat = SimpleDateFormat("MMMMMddyyyy"),
+            fieldNames = fieldNames,
+            headerRows = 0,
+            logger = Logger.getAnonymousLogger()
+        )
+
         val entries = fetcher.processRawJSON(Resources.toString(Resources.getResource("liveData.json"), Charsets.UTF_8))
 
-        assertThat(entries).hasSize(2045)
+        assertThat(entries).hasSize(2046)
     }
 }
