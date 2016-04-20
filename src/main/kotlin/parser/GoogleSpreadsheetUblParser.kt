@@ -1,7 +1,6 @@
 package gg.uhc.ubl.parser
 
 import com.google.common.base.Joiner
-import com.google.common.collect.ImmutableMap
 import com.google.common.io.Resources
 import gg.uhc.ubl.UblEntry
 import org.json.simple.JSONArray
@@ -13,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.logging.Logger
 
-open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, val dateFormat: SimpleDateFormat, val fieldNames: GoogleSpreadSheetColumnNames, val headerRows: Int, val logger: Logger) : UblParser {
+open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, val dateFormat: SimpleDateFormat, val fieldNames: GoogleSpreadSheetColumnNames, val logger: Logger) : UblParser {
     val URL_FORMAT = "https://spreadsheets.google.com/feeds/list/%s/%s/public/values?alt=json"
     val fetchUrl = URL(String.format(URL_FORMAT, documentId, worksheetId))
 
@@ -40,7 +39,6 @@ open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, v
     open fun convertEntryList(entryList: JSONArray) : Map<UUID, UblEntry> {
         return entryList
                 .filterNotNull()
-                .drop(headerRows)
                 .foldRightIndexed(mutableMapOf<UUID, UblEntry>(), { index, entry, map ->
                     try {
                         val parsed = parseEntry(entry as JSONObject)

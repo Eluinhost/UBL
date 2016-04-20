@@ -16,23 +16,22 @@ class GoogleSpreadsheetUblParserTest {
 
     lateinit var fetcher: GoogleSpreadsheetUblParser
     val fieldNames = GoogleSpreadsheetUblParser.GoogleSpreadSheetColumnNames(
-            caseUrl = "case",
-            expiryDate = "expirydate",
-            dateBanned = "datebanned",
-            ign = "ign",
-            lengthOfBan = "lengthofban",
-            reason = "reason",
-            uuid = "uuid"
+        caseUrl = "case",
+        expiryDate = "expirydate",
+        dateBanned = "datebanned",
+        ign = "ign",
+        lengthOfBan = "lengthofban",
+        reason = "reason",
+        uuid = "uuid"
     )
 
     @Before fun startup() {
         fetcher = GoogleSpreadsheetUblParser(
-                documentId = "",
-                worksheetId = "",
-                dateFormat = SimpleDateFormat("MMMMMddyyyy"),
-                fieldNames = fieldNames,
-                headerRows = 1,
-                logger = Logger.getAnonymousLogger()
+            documentId = "",
+            worksheetId = "",
+            dateFormat = SimpleDateFormat("MMMMMddyyyy"),
+            fieldNames = fieldNames,
+            logger = Logger.getAnonymousLogger()
         )
     }
 
@@ -220,7 +219,6 @@ class GoogleSpreadsheetUblParserTest {
     fun test_parse_valid_entries() {
         val entriesJSON = JSONParser().parse("""
         [
-            { "header": "row"},
             {
                 "gsx${'$'}${fieldNames.caseUrl}": {
                     "${'$'}t": "${fieldNames.caseUrl}"
@@ -289,7 +287,6 @@ class GoogleSpreadsheetUblParserTest {
             worksheetId = "",
             dateFormat = SimpleDateFormat("MMMMMddyyyy"),
             fieldNames = fieldNames,
-            headerRows = 0,
             logger = Logger.getAnonymousLogger()
         )
 
