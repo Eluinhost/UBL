@@ -1,0 +1,21 @@
+#
+# Ban message args:
+#   caseUrl
+#   banned
+#   lengthOfBan
+#   expires
+#   reason
+#   ign
+#
+
+waiting first load message: UBL is currently loading... please wait before logging in
+banned message: |
+  &4You cannot join this game, you are on the Universal Ban List:&r
+  Banned {{ign}} on {{banned}}: {{reason}}
+
+  Case: &9{Case}
+  Expires: {{expires}}, {{lengthOfBan}]
+auto refresh minutes: 10
+retry attempts: 3
+google docs id: "0AjACyg1Jc3_GdEhqWU5PTEVHZDVLYWphd2JfaEZXd2c"
+worksheet id: "od6"
