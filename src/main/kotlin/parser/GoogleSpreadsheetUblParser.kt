@@ -63,7 +63,7 @@ open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, v
                             true
                         }
                         else -> {
-                            logger.warning("An extra ban for the UUID ${parsed.first} was found, not because current expires later")
+                            logger.warning("An extra ban for the UUID ${parsed.first} was found, not replacing because current expires later")
                             true
                         }
                     }
