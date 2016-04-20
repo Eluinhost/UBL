@@ -8,7 +8,7 @@ import java.util.*
 
 private const val CASE_URL_KEY = "caseUrl"
 private const val BANNED_KEY = "banned"
-private const val EXPIRES_KEY = "expirs"
+private const val EXPIRES_KEY = "expires"
 private const val IGN_KEY = "ign"
 private const val LENGTH_OF_BAN_KEY = "lengthofban"
 private const val REASON_KEY = "reason"
