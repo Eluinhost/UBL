@@ -56,13 +56,13 @@ open class UblHandler(
         if (match.expires != null && match.expires.before(Date())) return
 
         event.loginResult = AsyncPlayerPreLoginEvent.Result.KICK_BANNED
-        event.kickMessage = ChatColor.translateAlternateColorCodes('&', this.kickMessage.format(
+        event.kickMessage = this.kickMessage.format(
             match.caseUrl,
             match.banned,
             match.lengthOfBan,
             match.expires,
             match.reason,
             match.ign
-        ))
+        )
     }
 }
