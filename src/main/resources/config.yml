@@ -15,7 +15,14 @@ banned message: |
 
   Case: &9{Case}
   Expires: {{expires}}, {{lengthOfBan}]
+field names:
+  caseUrl: "case"
+  expiryDate: "expirydate"
+  dateBanned: "datebanned"
+  ign: "ign"
+  lengthOfBan: "lengthofban"
+  reason: "reason"
+  uuid: "uuid"
 auto refresh minutes: 10
-retry attempts: 3
-google docs id: "0AjACyg1Jc3_GdEhqWU5PTEVHZDVLYWphd2JfaEZXd2c"
+google spreadsheet id: "0AjACyg1Jc3_GdEhqWU5PTEVHZDVLYWphd2JfaEZXd2c"
 worksheet id: "od6"
