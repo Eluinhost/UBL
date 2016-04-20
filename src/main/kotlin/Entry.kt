@@ -7,7 +7,5 @@ class Entry() : JavaPlugin() {
     override fun onEnable() {
         config.options().copyDefaults(true)
         saveConfig()
-
-        ConfigurationSerialization.registerClass(UblEntry::class.java)
     }
 }
