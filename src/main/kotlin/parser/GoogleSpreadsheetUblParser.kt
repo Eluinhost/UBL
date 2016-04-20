@@ -18,25 +18,25 @@ open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, v
 
     val nonAlphaRegex = Regex("[^a-zA-Z0-9]")
 
-    override fun saveRecords(records: List<UblEntry>) {
+    override fun saveRecords(records: Map<UUID, UblEntry>) {
         throw UnsupportedOperationException()
     }
 
-    override fun fetchAllRecords() : List<UblEntry> {
+    override fun fetchAllRecords() : Map<UUID, UblEntry> {
         // Read in the contents from the URL
         val raw = Resources.toString(fetchUrl, Charsets.UTF_8)
 
         return processRawJSON(raw)
     }
 
-    open fun processRawJSON(rawJSON: String) : List<UblEntry> {
+    open fun processRawJSON(rawJSON: String) : Map<UUID, UblEntry> {
         val outerObject = parseOuterObject(rawJSON)
         val entryList = grabEntriesList(outerObject)
 
         return convertEntryList(entryList)
     }
 
-    open fun convertEntryList(entryList: JSONArray) : List<UblEntry> {
+    open fun convertEntryList(entryList: JSONArray) : Map<UUID, UblEntry> {
         return entryList
                 .filterNotNull()
                 .drop(headerRows)
@@ -48,6 +48,7 @@ open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, v
                         null
                     }
                 })
+                .toMap()
     }
 
     open fun parseOuterObject(rawJsonString: String) : JSONObject {
@@ -80,7 +81,7 @@ open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, v
         return entryList as JSONArray
     }
 
-    open fun parseEntry(entryObject: JSONObject) : UblEntry {
+    open fun parseEntry(entryObject: JSONObject) : Pair<UUID, UblEntry> {
         if (entryObject !is JSONObject) throw InvalidDocumentFormatException("Expected entry item to be an json object, found ${entryObject.javaClass.name} instead")
 
         // Parse each item individually
@@ -122,18 +123,20 @@ open class GoogleSpreadsheetUblParser(documentId: String, worksheetId: String, v
                         .replace(nonAlphaRegex, "") // Punctuation/spacing differs sometimes, strip everything but alphanumerics
             )
         } catch (ex: java.text.ParseException) {
-            logger.info("Unable to parse the date $expiryDateString for $uuid, using 'forever' instead")
+            logger.warning("Unable to parse the date $expiryDateString for $uuid, using 'forever' instead")
             null
         }
 
-        return UblEntry(
+        return Pair(
+            uuid,
+            UblEntry(
                 caseUrl = caseUrl,
                 ign = ign,
                 reason = reason,
                 lengthOfBan = lengthOfBan,
-                uuid = uuid,
                 banned = dateBanned,
                 expires = dateExpires
+            )
         )
     }
 

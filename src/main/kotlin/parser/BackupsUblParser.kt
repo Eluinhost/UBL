@@ -21,39 +21,39 @@ open class BackupsUblParser(val backupFile: File) : UblParser {
         }
     }
 
-    override fun saveRecords(records: List<UblEntry>) {
+    override fun saveRecords(records: Map<UUID, UblEntry>) {
         val newConfig = YamlConfiguration()
 
         records.forEach {
-            val section = newConfig.createSection(it.uuid.toString())
+            val section = newConfig.createSection(it.key.toString())
 
-            section.set(CASE_URL_KEY, it.caseUrl)
-            section.set(BANNED_KEY, it.banned)
-            section.set(EXPIRES_KEY, DATE_FORMAT.format(it.expires))
-            section.set(IGN_KEY, it.ign)
-            section.set(LENGTH_OF_BAN_KEY, it.lengthOfBan)
-            section.set(REASON_KEY, it.reason)
+            section.set(CASE_URL_KEY, it.value.caseUrl)
+            section.set(BANNED_KEY, it.value.banned)
+            section.set(EXPIRES_KEY, DATE_FORMAT.format(it.value.expires))
+            section.set(IGN_KEY, it.value.ign)
+            section.set(LENGTH_OF_BAN_KEY, it.value.lengthOfBan)
+            section.set(REASON_KEY, it.value.reason)
         }
 
         newConfig.save(backupFile)
     }
 
-    override fun fetchAllRecords(): List<UblEntry> {
+    override fun fetchAllRecords(): Map<UUID, UblEntry> {
         val config = YamlConfiguration.loadConfiguration(backupFile)
 
         return config
                 .getKeys(false)
                 .map { Pair(UUID.fromString(it), config.getConfigurationSection(it)) }
-                .map {
+                .associate {Pair(
+                    it.first,
                     UblEntry(
                         caseUrl = it.second.getString(CASE_URL_KEY),
                         banned = it.second.getString(BANNED_KEY),
                         expires = DATE_FORMAT.parse(it.second.getString(EXPIRES_KEY)),
                         ign = it.second.getString(IGN_KEY),
                         lengthOfBan = it.second.getString(LENGTH_OF_BAN_KEY),
-                        reason = it.second.getString(REASON_KEY),
-                        uuid = it.first
+                        reason = it.second.getString(REASON_KEY)
                     )
-                }
+                )}
     }
 }

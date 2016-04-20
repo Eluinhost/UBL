@@ -206,14 +206,14 @@ class GoogleSpreadsheetUblParserTest {
 
         val entry = fetcher.parseEntry(entryJSON as JSONObject)
 
-        assertThat(entry.caseUrl).isEqualTo(fieldNames.caseUrl)
-        assertThat(entry.ign).isEqualTo(fieldNames.ign)
-        assertThat(entry.lengthOfBan).isEqualTo(fieldNames.lengthOfBan)
-        assertThat(entry.reason).isEqualTo(fieldNames.reason)
-        assertThat(entry.uuid.toString()).isEqualTo("c0b075fa-049d-49ec-879e-45e5f0e66b08")
-        assertThat(entry.expires).isWithinDayOfMonth(17)
-        assertThat(entry.expires).isWithinMonth(2)
-        assertThat(entry.expires).isWithinYear(2015)
+        assertThat(entry.second.caseUrl).isEqualTo(fieldNames.caseUrl)
+        assertThat(entry.second.ign).isEqualTo(fieldNames.ign)
+        assertThat(entry.second.lengthOfBan).isEqualTo(fieldNames.lengthOfBan)
+        assertThat(entry.second.reason).isEqualTo(fieldNames.reason)
+        assertThat(entry.first.toString()).isEqualTo("c0b075fa-049d-49ec-879e-45e5f0e66b08")
+        assertThat(entry.second.expires).isWithinDayOfMonth(17)
+        assertThat(entry.second.expires).isWithinMonth(2)
+        assertThat(entry.second.expires).isWithinYear(2015)
     }
 
     @Test
@@ -261,7 +261,7 @@ class GoogleSpreadsheetUblParserTest {
                     "${'$'}t": "${fieldNames.reason}"
                 },
                 "gsx${'$'}${fieldNames.uuid}": {
-                    "${'$'}t": "c0b075fa-049d-49ec-879e-45e5f0e66b08"
+                    "${'$'}t": "c0b075fa-049d-49ec-879e-45e5f0e66b09"
                 },
                 "gsx${'$'}${fieldNames.dateBanned}": {
                     "${'$'}t": "February 17, 2015"
@@ -275,7 +275,11 @@ class GoogleSpreadsheetUblParserTest {
 
         val entries = fetcher.convertEntryList(entriesJSON as JSONArray)
 
-        assertThat(entries).hasSize(2)
+        assertThat(entries)
+            .containsKeys(
+                UUID.fromString("c0b075fa-049d-49ec-879e-45e5f0e66b08"),
+                UUID.fromString("c0b075fa-049d-49ec-879e-45e5f0e66b09")
+            )
     }
 
     @Test
@@ -291,6 +295,7 @@ class GoogleSpreadsheetUblParserTest {
 
         val entries = fetcher.processRawJSON(Resources.toString(Resources.getResource("liveData.json"), Charsets.UTF_8))
 
-        assertThat(entries).hasSize(2046)
+        assertThat(entries.keys).hasSize(2046)
+        assertThat(entries.values).hasSize(2046)
     }
 }

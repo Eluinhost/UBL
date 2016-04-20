@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.plugin.Plugin
+import java.util.*
 
 open class UblHandler(
     val plugin: Plugin,
@@ -15,7 +16,7 @@ open class UblHandler(
 )
 : Listener {
     protected var initialized: Boolean = false
-    protected var entries = listOf<UblEntry>()
+    protected var entries = mapOf<UUID, UblEntry>()
 
     protected open fun loadLive() = try {
         entries = liveParser.fetchAllRecords()

@@ -8,6 +8,5 @@ data class UblEntry(
     val expires: Date?,
     val ign: String,
     val lengthOfBan: String,
-    val reason: String,
-    val uuid: UUID
+    val reason: String
 )
