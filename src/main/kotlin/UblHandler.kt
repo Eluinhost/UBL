@@ -1,7 +1,7 @@
 package gg.uhc.ubl
 
+import gg.uhc.ubl.parser.BackupsUblParser
 import gg.uhc.ubl.parser.UblParser
-import net.md_5.bungee.api.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
@@ -56,13 +56,12 @@ open class UblHandler(
         if (match.expires != null && match.expires.before(Date())) return
 
         event.loginResult = AsyncPlayerPreLoginEvent.Result.KICK_BANNED
-        event.kickMessage = this.kickMessage.format(
-            match.caseUrl,
-            match.banned,
-            match.lengthOfBan,
-            match.expires,
-            match.reason,
-            match.ign
-        )
+        event.kickMessage = this.kickMessage
+            .replace("{{caseUrl}}", match.caseUrl, true)
+            .replace("{{banned}}", match.banned, true)
+            .replace("{{lengthOfBan}}", match.lengthOfBan, true)
+            .replace("{{expires}}", BackupsUblParser.DATE_FORMAT.format(match.expires), true)
+            .replace("{{reason}}", match.reason, true)
+            .replace("{{ign}}", match.ign, true)
     }
 }

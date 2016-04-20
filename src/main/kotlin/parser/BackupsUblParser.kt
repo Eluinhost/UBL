@@ -12,7 +12,6 @@ private const val EXPIRES_KEY = "expirs"
 private const val IGN_KEY = "ign"
 private const val LENGTH_OF_BAN_KEY = "lengthofban"
 private const val REASON_KEY = "reason"
-private val DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd")
 
 open class BackupsUblParser(val backupFile: File) : UblParser {
     init {
@@ -56,4 +55,6 @@ open class BackupsUblParser(val backupFile: File) : UblParser {
                     )
                 )}
     }
+
+    companion object DATE_FORMAT : SimpleDateFormat("yyyy-MM-dd")
 }
