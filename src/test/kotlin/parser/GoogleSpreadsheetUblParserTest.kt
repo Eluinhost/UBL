@@ -295,6 +295,7 @@ class GoogleSpreadsheetUblParserTest {
 
         val entries = fetcher.processRawJSON(Resources.toString(Resources.getResource("liveData.json"), Charsets.UTF_8))
 
+        // actual entry list is 2046 with duplicates
         assertThat(entries.keys).hasSize(2008)
         assertThat(entries.values).hasSize(2008)
     }
