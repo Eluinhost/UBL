@@ -13,7 +13,7 @@ banned message: |
   &4You cannot join this game, you are on the Universal Ban List:&r
   Banned {{ign}} on {{banned}}: {{reason}}
 
-  Case: &9{Case}
+  Case: &9{{caseUrl}}
   Expires: {{expires}}, {{lengthOfBan}}
 column names:
   caseUrl: "case"
