@@ -15,7 +15,7 @@ banned message: |
 
   Case: &9{Case}
   Expires: {{expires}}, {{lengthOfBan}}
-field names:
+column names:
   caseUrl: "case"
   expiryDate: "expirydate"
   dateBanned: "datebanned"
