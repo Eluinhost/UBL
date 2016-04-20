@@ -41,19 +41,19 @@ open class BackupsUblParser(val backupFile: File) : UblParser {
         val config = YamlConfiguration.loadConfiguration(backupFile)
 
         return config
-                .getKeys(false)
-                .map { Pair(UUID.fromString(it), config.getConfigurationSection(it)) }
-                .associate {Pair(
-                    it.first,
-                    UblEntry(
-                        caseUrl = it.second.getString(CASE_URL_KEY),
-                        banned = it.second.getString(BANNED_KEY),
-                        expires = DATE_FORMAT.parse(it.second.getString(EXPIRES_KEY)),
-                        ign = it.second.getString(IGN_KEY),
-                        lengthOfBan = it.second.getString(LENGTH_OF_BAN_KEY),
-                        reason = it.second.getString(REASON_KEY)
-                    )
-                )}
+            .getKeys(false)
+            .map { Pair(UUID.fromString(it), config.getConfigurationSection(it)) }
+            .associate {Pair(
+                it.first,
+                UblEntry(
+                    caseUrl = it.second.getString(CASE_URL_KEY),
+                    banned = it.second.getString(BANNED_KEY),
+                    expires = DATE_FORMAT.parse(it.second.getString(EXPIRES_KEY)),
+                    ign = it.second.getString(IGN_KEY),
+                    lengthOfBan = it.second.getString(LENGTH_OF_BAN_KEY),
+                    reason = it.second.getString(REASON_KEY)
+                )
+            )}
     }
 
     companion object DATE_FORMAT : SimpleDateFormat("yyyy-MM-dd")
