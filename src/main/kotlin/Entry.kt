@@ -1,5 +1,6 @@
 package gg.uhc.ubl
 
+import gg.uhc.ubl.commands.RefreshUblCommand
 import gg.uhc.ubl.parser.BackupsUblParser
 import gg.uhc.ubl.parser.GoogleSpreadsheetUblParser
 import org.bukkit.plugin.java.JavaPlugin
@@ -40,5 +41,7 @@ class Entry() : JavaPlugin() {
         handler.start()
 
         server.pluginManager.registerEvents(handler, this)
+
+        getCommand("ublrefresh").executor = RefreshUblCommand(handler, this)
     }
 }

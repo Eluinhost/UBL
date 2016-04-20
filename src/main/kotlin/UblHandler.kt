@@ -20,14 +20,16 @@ open class UblHandler(
     protected var initialized: Boolean = false
     protected var entries = mapOf<UUID, UblEntry>()
 
-    protected open fun loadLive() = try {
+    open fun loadLive() = try {
         plugin.logger.info("Starting load of UBL from live data")
         entries = liveParser.fetchAllRecords()
         plugin.logger.info("Live UBL data loaded!")
         initialized = true
         saveBackup()
+        true
     } catch (ex: Throwable) {
         plugin.logger.severe("Failed to load from live UBL: ${ex.message}")
+        false
     }
 
     protected open fun saveBackup() = try {

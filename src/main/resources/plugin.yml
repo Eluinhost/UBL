@@ -3,3 +3,9 @@ main: ${project.groupId}.${project.artifactId}.Entry
 version: ${project.version}
 author: ghowden/Eluinhost
 database: false
+commands:
+  ublrefresh:
+    permission: uhc.ubl.refresh
+permissions:
+  uhc.ubl.refresh:
+    default: op
