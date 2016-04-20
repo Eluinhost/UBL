@@ -11,10 +11,10 @@
 waiting first load message: UBL is currently loading... please wait before logging in
 banned message: |
   &4You cannot join this game, you are on the Universal Ban List:&r
-  Banned {{ign}} on {{banned}}: {{reason}}
+  Banned "{{ign}}" on {{banned}} for {{lengthOfBan}}: {{reason}}
 
   Case: &9{{caseUrl}}
-  Expires: {{expires}}, {{lengthOfBan}}
+  Expires: {{expires}}
 column names:
   caseUrl: "case"
   expiryDate: "expirydate"
